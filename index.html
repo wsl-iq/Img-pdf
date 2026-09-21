@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0e14" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f4f6fa" media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="From Image To PDF"/>
+
+  <title>From Image To PDF</title>
+  <link rel="manifest" href="manifest.json" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Core CSS -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+
+  <!-- Device-specific CSS (loaded on top of core) -->
+  <link rel="stylesheet" href="css/mobile.css" media="screen and (max-width: 599px)" />
+  <link rel="stylesheet" href="css/ipad.css" media="screen and (min-width: 600px) and (max-width: 1199px)" />
+  <link rel="stylesheet" href="css/computer.css" media="screen and (min-width: 1200px)" />
+</head>
+<body data-device="mobile">
+  <div class="app" id="app">
+    <header class="app-header">
+      <div class="header-inner">
+        <h1 class="app-title">
+          <span class="icon icon-pdf" aria-hidden="true"></span>
+          <span>محول الصور إلى PDF</span>
+        </h1>
+        <div class="header-actions">
+          <button class="btn-icon" id="btnToggleTheme" aria-label="تبديل المظهر" title="تبديل المظهر" type="button">
+            <span class="icon icon-theme" aria-hidden="true"></span>
+          </button>
+          <button class="btn-icon" id="btnToggleSettings" aria-label="الإعدادات" title="الإعدادات" type="button">
+            <span class="icon icon-settings" aria-hidden="true"></span>
+          </button>
+          <button class="btn-icon" id="btnToggleRecords" aria-label="السجلات" title="السجلات" type="button">
+            <span class="icon icon-records" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- VIEW: MAIN -->
+      <div class="view view-main" id="viewMain" data-view="main">
+        <section class="drop-zone" id="dropZone" role="button" tabindex="0" aria-label="منطقة رفع الصور">
+          <span class="icon icon-upload drop-zone-icon" aria-hidden="true"></span>
+          <div class="drop-zone-title">اختر الصور أو اسحبها هنا</div>
+          <div class="drop-zone-subtitle">يمكنك رفع عدة صور وتحويلها إلى ملف PDF واحد</div>
+          <div class="drop-zone-formats" dir="ltr">JPG · JPEG · PNG · WEBP</div>
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/jpg" multiple aria-label="اختر الصور" />
+        </section>
+
+        <div class="toolbar" id="toolbar" role="toolbar" aria-label="أدوات الصور">
+          <div class="toolbar-info">
+            <span>الصور:</span>
+            <span class="badge" id="imageCount">0</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btnReorderToggle" aria-label="ترتيب الصور" type="button">
+            <span class="icon icon-up" aria-hidden="true"></span>
+            <span>ترتيب</span>
+          </button>
+          <button class="btn btn-secondary btn-sm" id="btnClearAll" aria-label="حذف الكل" type="button">
+            <span class="icon icon-trash" aria-hidden="true"></span>
+            <span>حذف الكل</span>
+          </button>
+          <button class="btn btn-primary btn-sm" id="btnGenerate" aria-label="إنشاء PDF" type="button">
+            <span class="icon icon-pdf" aria-hidden="true"></span>
+            <span>إنشاء PDF</span>
+          </button>
+        </div>
+
+        <section id="imageSection" aria-label="الصور المختارة">
+          <div class="empty-state" id="emptyState">
+            <span class="icon icon-upload empty-state-icon" aria-hidden="true"></span>
+            <div class="empty-state-title">لا توجد صور بعد</div>
+            <div class="empty-state-text">قم برفع الصور التي تريد تحويلها إلى PDF. يمكنك رفع عدة صور مرة واحدة.</div>
+          </div>
+          <ul class="image-grid hidden" id="imageGrid" aria-label="قائمة الصور"></ul>
+        </section>
+      </div>
+
+      <!-- VIEW: SETTINGS -->
+      <div class="view view-page hidden" id="viewSettings" data-view="settings">
+        <div class="page-header">
+          <button class="btn-icon" id="btnBackSettings" aria-label="رجوع" type="button">
+            <span class="icon icon-back" aria-hidden="true"></span>
+          </button>
+          <h2 class="page-title">الإعدادات</h2>
+          <span class="page-header-spacer"></span>
+        </div>
+
+        <div class="page-content">
+          <!-- Theme -->
+          <div class="setting-group">
+            <label class="setting-label">المظهر</label>
+            <div class="segmented" data-setting="theme" role="radiogroup" aria-label="المظهر">
+              <button type="button" data-value="light" role="radio" aria-checked="false">فاتح</button>
+              <button type="button" data-value="dark" role="radio" aria-checked="false">داكن</button>
+              <button type="button" data-value="auto" role="radio" aria-checked="false">تلقائي</button>
+            </div>
+          </div>
+
+          <!-- Font -->
+          <div class="setting-group">
+            <label class="setting-label">خط التطبيق</label>
+            <div class="segmented" data-setting="font" role="radiogroup" aria-label="الخط">
+              <button type="button" data-value="cairo" role="radio" aria-checked="false">القاهرة</button>
+              <button type="button" data-value="tajawal" role="radio" aria-checked="false">تجوّل</button>
+              <button type="button" data-value="noto" role="radio" aria-checked="false">نوتو كوفي</button>
+              <button type="button" data-value="system" role="radio" aria-checked="false">النظام</button>
+            </div>
+          </div>
+
+          <!-- Page size -->
+          <div class="setting-group">
+            <label class="setting-label">حجم الصفحة</label>
+            <div class="segmented" data-setting="pageSize" role="radiogroup" aria-label="حجم الصفحة">
+              <button type="button" data-value="a4" role="radio" aria-checked="false">A4</button>
+              <button type="button" data-value="letter" role="radio" aria-checked="false">Letter</button>
+              <button type="button" data-value="auto" role="radio" aria-checked="false">تلقائي</button>
+            </div>
+          </div>
+
+          <!-- Orientation -->
+          <div class="setting-group">
+            <label class="setting-label">الاتجاه</label>
+            <div class="segmented" data-setting="orientation" role="radiogroup" aria-label="اتجاه الصفحة">
+              <button type="button" data-value="portrait" role="radio" aria-checked="false">طولي</button>
+              <button type="button" data-value="landscape" role="radio" aria-checked="false">عرضي</button>
+              <button type="button" data-value="auto" role="radio" aria-checked="false">تلقائي</button>
+            </div>
+          </div>
+
+          <!-- Margin -->
+          <div class="setting-group">
+            <label class="setting-label">الهامش</label>
+            <div class="segmented" data-setting="margin" role="radiogroup" aria-label="الهامش">
+              <button type="button" data-value="0" role="radio" aria-checked="false">بدون</button>
+              <button type="button" data-value="small" role="radio" aria-checked="false">صغير</button>
+              <button type="button" data-value="medium" role="radio" aria-checked="false">متوسط</button>
+            </div>
+          </div>
+
+          <!-- Quality -->
+          <div class="setting-group">
+            <label class="setting-label">جودة الصورة</label>
+            <div class="segmented" data-setting="quality" role="radiogroup" aria-label="جودة الصورة">
+              <button type="button" data-value="0.7" role="radio" aria-checked="false">متوسطة</button>
+              <button type="button" data-value="0.85" role="radio" aria-checked="false">عالية</button>
+              <button type="button" data-value="1" role="radio" aria-checked="false">قصوى</button>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="setting-group danger-zone">
+            <label class="setting-label">منطقة الخطر</label>
+            <p class="setting-description">سيتم حذف جميع الإعدادات والسجلات نهائياً.</p>
+            <button class="btn btn-danger" id="btnWipeStorage" type="button">
+              <span class="icon icon-trash" aria-hidden="true"></span>
+              <span>حذف كل التخزين والإعدادات</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: RECORDS -->
+      <div class="view view-page hidden" id="viewRecords" data-view="records">
+        <div class="page-header">
+          <button class="btn-icon" id="btnBackRecords" aria-label="رجوع" type="button">
+            <span class="icon icon-back" aria-hidden="true"></span>
+          </button>
+          <h2 class="page-title">سجل النشاط</h2>
+          <span class="page-header-spacer"></span>
+        </div>
+
+        <div class="page-content">
+          <div class="records-list" id="recordsList"></div>
+          <button class="btn btn-danger" id="btnClearRecords" type="button">
+            <span class="icon icon-trash" aria-hidden="true"></span>
+            <span>مسح السجلات</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <div class="dev-info">
+        <span>المطور: </span>
+        <span class="dev-name">محمد الباقر</span>
+        <br />
+        <span>جامعة الإمام جعفر الصادق (ع) · كلية التربية · قسم اللغة الإنجليزية</span>
+      </div>
+      <div class="copyright" dir="ltr">
+        Copyright © 2026, lnc. Mohammed Al-Baqer. All rights reserved.
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+  <div id="modalContainer"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

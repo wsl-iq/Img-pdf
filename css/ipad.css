@@ -1,0 +1,71 @@
+/* IPAD / TABLET — 600px → 1199px */
+
+:root {
+  --app-max-width: 900px;
+  --app-padding: 24px;
+  --content-max-width: 800px;
+}
+
+.app-title span:last-child {
+  display: inline;
+}
+
+.app-title { font-size: var(--font-size); }
+
+/* Drop Zone */
+.drop-zone {
+  min-height: 200px;
+  padding: var(--spacing-lg);
+}
+.drop-zone-icon { width: 52px; height: 52px; }
+.drop-zone-title { font-size: var(--font-size-lg); }
+
+/* Toolbar: single row */
+.toolbar {
+  gap: var(--spacing-sm);
+}
+
+.toolbar-info {
+  width: auto;
+  margin-bottom: 0;
+  margin-inline-end: auto;
+}
+
+.toolbar .btn-sm {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  font-size: var(--font-size-xs);
+}
+
+/* Image grid: 3 columns */
+.image-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-sm);
+}
+
+/* Settings: 2 columns */
+.page-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.setting-group.danger-zone {
+  grid-column: 1 / -1;
+}
+
+/* Page header */
+.page-title {
+  font-size: var(--font-size-lg);
+}
+
+/* Modals: centered */
+.modal {
+  border-radius: var(--radius-xl);
+  max-width: 440px;
+}
+
+/* Footer */
+.app-footer {
+  font-size: var(--font-size-xs);
+}
