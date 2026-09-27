@@ -10,7 +10,7 @@
 
   App.Stats = {
     buildWeeklyChart: function (operations) {
-      var days = ['أحد', 'إثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'];
+      var days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
       var counts = [0, 0, 0, 0, 0, 0, 0];
 
       var now = Date.now();
