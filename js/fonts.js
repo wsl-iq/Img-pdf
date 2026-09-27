@@ -1,48 +1,47 @@
-import { updateSetting, getSettings } from './storage.js';
+/**
+ * fonts
+ * Dynamic font family loader.
+ */
 
-const FONT_MAP = {
-  cairo: {
-    family: 'Cairo',
-    url: 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap',
-  },
-  tajawal: {
-    family: 'Tajawal',
-    url: 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap',
-  },
-  noto: {
-    family: 'Noto Kufi Arabic',
-    url: 'https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&display=swap',
-  },
-  system: { family: null, url: null },
-};
+(function () {
+  'use strict';
 
-const loadedFonts = new Set();
+  var App = window.App;
 
-const loadFont = (key) => {
-  const cfg = FONT_MAP[key];
-  if (!cfg || !cfg.url || loadedFonts.has(key)) return;
-  const link = document.getElementById('fontLink');
-  if (link) {
-    link.href = cfg.url;
-    loadedFonts.add(key);
+  var MAP = {
+    cairo: { url: 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' },
+    tajawal: { url: 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap' },
+    noto: { url: 'https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&display=swap' },
+    system: { url: null }
+  };
+
+  var loaded = {};
+
+  function apply(key) {
+    document.documentElement.setAttribute('data-font', key);
+    var cfg = MAP[key];
+    if (!cfg || !cfg.url || loaded[key]) return;
+    var link = document.getElementById('fontLink');
+    if (link) {
+      link.href = cfg.url;
+      loaded[key] = true;
+    }
   }
-};
 
-const applyFont = (key) => {
-  document.documentElement.setAttribute('data-font', key);
-  loadFont(key);
-};
+  App.Fonts = {
+    init: function () {
+      var s = App.Storage.getSettings();
+      apply(s.font || 'cairo');
+    },
 
-export const initFont = () => {
-  const settings = getSettings();
-  const key = settings.font || 'cairo';
-  applyFont(key);
-};
+    set: function (key) {
+      if (!MAP[key]) return;
+      apply(key);
+      var s = App.Storage.getSettings();
+      s.font = key;
+      App.Storage.saveSettings(s);
+    }
+  };
 
-export const setFont = (key) => {
-  if (!FONT_MAP[key]) return;
-  applyFont(key);
-  updateSetting('font', key);
-};
-
-export const getCurrentFont = () => getSettings().font || 'cairo';
+  console.log('[fonts] loaded');
+})();

@@ -1,214 +1,345 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="dark" data-font="cairo">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0e14" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#f4f6fa" media="(prefers-color-scheme: light)" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="description" content="From Image To PDF"/>
-
-  <title>From Image To PDF</title>
-  <link rel="manifest" href="manifest.json" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link id="fontLink" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
-
-  <!-- Core CSS -->
-  <link rel="stylesheet" href="css/variables.css" />
-  <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/animations.css" />
-
-  <!-- Device-specific CSS (loaded on top of core) -->
-  <link rel="stylesheet" href="css/mobile.css" media="screen and (max-width: 599px)" />
-  <link rel="stylesheet" href="css/ipad.css" media="screen and (min-width: 600px) and (max-width: 1199px)" />
-  <link rel="stylesheet" href="css/computer.css" media="screen and (min-width: 1200px)" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>محول الصور إلى PDF</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link id="fontLink" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/mobile.css" media="screen and (max-width: 767px)">
+<link rel="stylesheet" href="css/ipad.css" media="screen and (min-width: 768px) and (max-width: 1199px)">
+<link rel="stylesheet" href="css/computer.css" media="screen and (min-width: 1200px)">
 </head>
 <body data-device="mobile">
-  <div class="app" id="app">
-    <header class="app-header">
-      <div class="header-inner">
-        <h1 class="app-title">
-          <span class="icon icon-pdf" aria-hidden="true"></span>
-          <span>From Image To PDF</span>
-        </h1>
-        <div class="header-actions">
-          <button class="btn-icon" id="btnToggleTheme" aria-label="تبديل المظهر" title="تبديل المظهر" type="button">
-            <span class="icon icon-theme" aria-hidden="true"></span>
-          </button>
-          <button class="btn-icon" id="btnToggleSettings" aria-label="الإعدادات" title="الإعدادات" type="button">
-            <span class="icon icon-settings" aria-hidden="true"></span>
-          </button>
-          <button class="btn-icon" id="btnToggleRecords" aria-label="السجلات" title="السجلات" type="button">
-            <span class="icon icon-records" aria-hidden="true"></span>
-          </button>
-        </div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ico-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 8 12 3 7 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-pdf" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-trash" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-up" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-down" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-close" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="8" x2="12.01" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-records" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-back" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><polyline points="12 19 5 12 12 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-undo" viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20v-7a4 4 0 0 0-4-4H4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-redo" viewBox="0 0 24 24"><polyline points="15 14 20 9 15 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20v-7a4 4 0 0 1 4-4h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-stats" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="20" x2="12" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="20" x2="6" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-word" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="8 12 10 18 12 14 14 18 16 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-export" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="7 10 12 15 17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-import" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 8 12 3 7 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-rotate" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-sliders" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="4" y1="10" x2="4" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="8" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="20" y1="21" x2="20" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="20" y1="12" x2="20" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="14" x2="7" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="17" y1="16" x2="23" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ico-facebook" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-telegram" viewBox="0 0 24 24"><path d="M21.5 2.5 2.5 10.5l5.5 2 2 6.5 3-4 5 4 3.5-16.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="8 12.5 18 6 12 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-github" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <header class="app-header">
+    <div class="header-inner">
+      <h1 class="app-title">
+        <svg class="icon icon-lg"><use href="#ico-pdf"/></svg>
+        <span class="app-title-text">محول الصور إلى PDF</span>
+      </h1>
+      <div class="header-actions">
+        <button type="button" class="btn-icon" id="btnUndo" aria-label="تراجع" disabled>
+          <svg class="icon"><use href="#ico-undo"/></svg>
+        </button>
+        <button type="button" class="btn-icon" id="btnRedo" aria-label="إعادة" disabled>
+          <svg class="icon"><use href="#ico-redo"/></svg>
+        </button>
+        <button type="button" class="btn-icon" id="btnToggleTheme" aria-label="تبديل المظهر">
+          <svg class="icon"><use href="#ico-theme"/></svg>
+        </button>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <main class="app-main">
-      <!-- VIEW: MAIN -->
-      <div class="view view-main" id="viewMain" data-view="main">
-        <section class="drop-zone" id="dropZone" role="button" tabindex="0" aria-label="منطقة رفع الصور">
-          <span class="icon icon-upload drop-zone-icon" aria-hidden="true"></span>
-          <div class="drop-zone-title">اختر الصور أو اسحبها هنا</div>
-          <div class="drop-zone-subtitle">يمكنك رفع عدة صور وتحويلها إلى ملف PDF واحد</div>
-          <div class="drop-zone-formats" dir="ltr">JPG · JPEG · PNG · WEBP</div>
-          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/jpg" multiple aria-label="اختر الصور" />
-        </section>
+  <main class="app-main">
 
-        <div class="toolbar" id="toolbar" role="toolbar" aria-label="أدوات الصور">
-          <div class="toolbar-info">
-            <span>الصور:</span>
-            <span class="badge" id="imageCount">0</span>
-          </div>
-          <button class="btn btn-secondary btn-sm" id="btnReorderToggle" aria-label="ترتيب الصور" type="button">
-            <span class="icon icon-up" aria-hidden="true"></span>
-            <span>ترتيب</span>
-          </button>
-          <button class="btn btn-secondary btn-sm" id="btnClearAll" aria-label="حذف الكل" type="button">
-            <span class="icon icon-trash" aria-hidden="true"></span>
-            <span>حذف الكل</span>
-          </button>
-          <button class="btn btn-primary btn-sm" id="btnGenerate" aria-label="إنشاء PDF" type="button">
-            <span class="icon icon-pdf" aria-hidden="true"></span>
-            <span>إنشاء PDF</span>
-          </button>
+    <div class="view view-main" id="viewMain" data-view="main">
+
+      <section class="drop-zone" id="dropZone" role="button" tabindex="0">
+        <svg class="icon drop-zone-icon"><use href="#ico-upload"/></svg>
+        <div class="drop-zone-title">اختر الصور أو اسحبها هنا</div>
+        <div class="drop-zone-subtitle">يمكنك رفع عدة صور وتحويلها إلى PDF أو Word</div>
+        <div class="drop-zone-formats" dir="ltr">JPG - JPEG - PNG - WEBP</div>
+        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/jpg" multiple>
+      </section>
+
+      <div class="toolbar">
+        <div class="toolbar-info">
+          <span>الصور:</span>
+          <span class="badge" id="imageCount">0</span>
         </div>
-
-        <section id="imageSection" aria-label="الصور المختارة">
-          <div class="empty-state" id="emptyState">
-            <span class="icon icon-upload empty-state-icon" aria-hidden="true"></span>
-            <div class="empty-state-title">لا توجد صور بعد</div>
-            <div class="empty-state-text">قم برفع الصور التي تريد تحويلها إلى PDF. يمكنك رفع عدة صور مرة واحدة.</div>
-          </div>
-          <ul class="image-grid hidden" id="imageGrid" aria-label="قائمة الصور"></ul>
-        </section>
-      </div>
-
-      <!-- VIEW: SETTINGS -->
-      <div class="view view-page hidden" id="viewSettings" data-view="settings">
-        <div class="page-header">
-          <button class="btn-icon" id="btnBackSettings" aria-label="رجوع" type="button">
-            <span class="icon icon-back" aria-hidden="true"></span>
-          </button>
-          <h2 class="page-title">الإعدادات</h2>
-          <span class="page-header-spacer"></span>
-        </div>
-
-        <div class="page-content">
-          <!-- Theme -->
-          <div class="setting-group">
-            <label class="setting-label">المظهر</label>
-            <div class="segmented" data-setting="theme" role="radiogroup" aria-label="المظهر">
-              <button type="button" data-value="light" role="radio" aria-checked="false">فاتح</button>
-              <button type="button" data-value="dark" role="radio" aria-checked="false">داكن</button>
-              <button type="button" data-value="auto" role="radio" aria-checked="false">تلقائي</button>
-            </div>
-          </div>
-
-          <!-- Font -->
-          <div class="setting-group">
-            <label class="setting-label">خط التطبيق</label>
-            <div class="segmented" data-setting="font" role="radiogroup" aria-label="الخط">
-              <button type="button" data-value="cairo" role="radio" aria-checked="false">القاهرة</button>
-              <button type="button" data-value="tajawal" role="radio" aria-checked="false">تجوّل</button>
-              <button type="button" data-value="noto" role="radio" aria-checked="false">نوتو كوفي</button>
-              <button type="button" data-value="system" role="radio" aria-checked="false">النظام</button>
-            </div>
-          </div>
-
-          <!-- Page size -->
-          <div class="setting-group">
-            <label class="setting-label">حجم الصفحة</label>
-            <div class="segmented" data-setting="pageSize" role="radiogroup" aria-label="حجم الصفحة">
-              <button type="button" data-value="a4" role="radio" aria-checked="false">A4</button>
-              <button type="button" data-value="letter" role="radio" aria-checked="false">Letter</button>
-              <button type="button" data-value="auto" role="radio" aria-checked="false">تلقائي</button>
-            </div>
-          </div>
-
-          <!-- Orientation -->
-          <div class="setting-group">
-            <label class="setting-label">الاتجاه</label>
-            <div class="segmented" data-setting="orientation" role="radiogroup" aria-label="اتجاه الصفحة">
-              <button type="button" data-value="portrait" role="radio" aria-checked="false">طولي</button>
-              <button type="button" data-value="landscape" role="radio" aria-checked="false">عرضي</button>
-              <button type="button" data-value="auto" role="radio" aria-checked="false">تلقائي</button>
-            </div>
-          </div>
-
-          <!-- Margin -->
-          <div class="setting-group">
-            <label class="setting-label">الهامش</label>
-            <div class="segmented" data-setting="margin" role="radiogroup" aria-label="الهامش">
-              <button type="button" data-value="0" role="radio" aria-checked="false">بدون</button>
-              <button type="button" data-value="small" role="radio" aria-checked="false">صغير</button>
-              <button type="button" data-value="medium" role="radio" aria-checked="false">متوسط</button>
-            </div>
-          </div>
-
-          <!-- Quality -->
-          <div class="setting-group">
-            <label class="setting-label">جودة الصورة</label>
-            <div class="segmented" data-setting="quality" role="radiogroup" aria-label="جودة الصورة">
-              <button type="button" data-value="0.7" role="radio" aria-checked="false">متوسطة</button>
-              <button type="button" data-value="0.85" role="radio" aria-checked="false">عالية</button>
-              <button type="button" data-value="1" role="radio" aria-checked="false">قصوى</button>
-            </div>
-          </div>
-
-          <!-- Danger Zone -->
-          <div class="setting-group danger-zone">
-            <label class="setting-label">منطقة الخطر</label>
-            <p class="setting-description">سيتم حذف جميع الإعدادات والسجلات نهائياً.</p>
-            <button class="btn btn-danger" id="btnWipeStorage" type="button">
-              <span class="icon icon-trash" aria-hidden="true"></span>
-              <span>حذف كل التخزين والإعدادات</span>
-            </button>
-          </div>
-        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="btnReorderToggle">
+          <svg class="icon"><use href="#ico-up"/></svg>
+          <span>ترتيب</span>
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" id="btnExportSettings">
+          <svg class="icon"><use href="#ico-export"/></svg>
+          <span>تصدير</span>
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" id="btnImportSettings">
+          <svg class="icon"><use href="#ico-import"/></svg>
+          <span>استيراد</span>
+        </button>
+        <input type="file" id="importInput" accept="application/json" hidden>
       </div>
 
-      <!-- VIEW: RECORDS -->
-      <div class="view view-page hidden" id="viewRecords" data-view="records">
-        <div class="page-header">
-          <button class="btn-icon" id="btnBackRecords" aria-label="رجوع" type="button">
-            <span class="icon icon-back" aria-hidden="true"></span>
-          </button>
-          <h2 class="page-title">سجل النشاط</h2>
-          <span class="page-header-spacer"></span>
+      <section>
+        <div class="empty-state" id="emptyState">
+          <svg class="icon empty-state-icon"><use href="#ico-upload"/></svg>
+          <div class="empty-state-title">لا توجد صور بعد</div>
+          <div class="empty-state-text">قم برفع الصور التي تريد تحويلها. يمكنك رفع عدة صور مرة واحدة.</div>
+        </div>
+        <ul class="image-grid hidden" id="imageGrid"></ul>
+      </section>
+
+      <div class="action-bar">
+        <button type="button" class="btn btn-secondary" id="btnClearAll">
+          <svg class="icon"><use href="#ico-trash"/></svg>
+          <span>حذف الكل</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="btnExportWord">
+          <svg class="icon"><use href="#ico-word"/></svg>
+          <span>Word</span>
+        </button>
+        <button type="button" class="btn btn-primary" id="btnGenerate">
+          <svg class="icon"><use href="#ico-pdf"/></svg>
+          <span>إنشاء PDF</span>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="view view-page hidden" id="viewSettings" data-view="settings">
+      <div class="page-header">
+        <button type="button" class="btn-icon" id="btnBackSettings">
+          <svg class="icon"><use href="#ico-back"/></svg>
+        </button>
+        <h2 class="page-title">الإعدادات</h2>
+        <span class="page-header-spacer"></span>
+      </div>
+      <div class="page-content">
+
+        <div class="setting-group">
+          <label class="setting-label">المظهر</label>
+          <div class="segmented" data-setting="theme">
+            <button type="button" data-value="light">فاتح</button>
+            <button type="button" data-value="dark">داكن</button>
+            <button type="button" data-value="auto">تلقائي</button>
+          </div>
         </div>
 
-        <div class="page-content">
-          <div class="records-list" id="recordsList"></div>
-          <button class="btn btn-danger" id="btnClearRecords" type="button">
-            <span class="icon icon-trash" aria-hidden="true"></span>
-            <span>مسح السجلات</span>
+        <div class="setting-group">
+          <label class="setting-label">خط التطبيق</label>
+          <div class="segmented" data-setting="font">
+            <button type="button" data-value="cairo">القاهرة</button>
+            <button type="button" data-value="tajawal">تجول</button>
+            <button type="button" data-value="noto">نوتو كوفي</button>
+            <button type="button" data-value="system">النظام</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">حجم الصفحة</label>
+          <div class="segmented" data-setting="pageSize">
+            <button type="button" data-value="a4">A4</button>
+            <button type="button" data-value="letter">Letter</button>
+            <button type="button" data-value="auto">تلقائي</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">الاتجاه</label>
+          <div class="segmented" data-setting="orientation">
+            <button type="button" data-value="portrait">طولي</button>
+            <button type="button" data-value="landscape">عرضي</button>
+            <button type="button" data-value="auto">تلقائي</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">الهامش</label>
+          <div class="segmented" data-setting="margin">
+            <button type="button" data-value="0">بدون</button>
+            <button type="button" data-value="small">صغير</button>
+            <button type="button" data-value="medium">متوسط</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">الجودة</label>
+          <div class="segmented" data-setting="quality">
+            <button type="button" data-value="0.7">متوسطة</button>
+            <button type="button" data-value="0.85">عالية</button>
+            <button type="button" data-value="1">قصوى</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">الضغط الذكي</label>
+          <div class="segmented" data-setting="compression">
+            <button type="button" data-value="small">ملف صغير</button>
+            <button type="button" data-value="balanced">متوازن</button>
+            <button type="button" data-value="max">جودة قصوى</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">ترقيم الصفحات</label>
+          <div class="segmented" data-setting="pageNumbers">
+            <button type="button" data-value="false">معطل</button>
+            <button type="button" data-value="true">مفعل</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">الاهتزاز</label>
+          <div class="segmented" data-setting="haptics">
+            <button type="button" data-value="false">معطل</button>
+            <button type="button" data-value="true">مفعل</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">تابعنا</label>
+          <div class="social-links">
+            <a class="social-link" href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="فيسبوك">
+              <svg class="icon"><use href="#ico-facebook"/></svg>
+              <span>فيسبوك</span>
+            </a>
+            <a class="social-link" href="https://t.me" target="_blank" rel="noopener noreferrer" aria-label="تيليجرام">
+              <svg class="icon"><use href="#ico-telegram"/></svg>
+              <span>تيليجرام</span>
+            </a>
+            <a class="social-link" href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="جيت هاب">
+              <svg class="icon"><use href="#ico-github"/></svg>
+              <span>جيت هاب</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="setting-group danger-zone">
+          <label class="setting-label">منطقة الخطر</label>
+          <p class="setting-description">سيتم حذف جميع الإعدادات والسجلات والصور نهائيا.</p>
+          <button type="button" class="btn btn-danger" id="btnWipeStorage">
+            <svg class="icon"><use href="#ico-trash"/></svg>
+            <span>حذف كل التخزين</span>
           </button>
         </div>
-      </div>
-    </main>
 
-    <footer class="app-footer">
-      <div class="dev-info">
-        <span>المطور: </span>
-        <span class="dev-name">محمد الباقر</span>
-        <br />
       </div>
-      <div class="copyright" dir="ltr">
-        Copyright © 2026, lnc. Mohammed Al-Baqer. All rights reserved.
+    </div>
+
+    <div class="view view-page hidden" id="viewRecords" data-view="records">
+      <div class="page-header">
+        <button type="button" class="btn-icon" id="btnBackRecords">
+          <svg class="icon"><use href="#ico-back"/></svg>
+        </button>
+        <h2 class="page-title">سجل النشاط</h2>
+        <span class="page-header-spacer"></span>
       </div>
-    </footer>
-  </div>
+      <div class="page-content">
+        <div class="records-list" id="recordsList"></div>
+        <button type="button" class="btn btn-danger" id="btnClearRecords">
+          <svg class="icon"><use href="#ico-trash"/></svg>
+          <span>مسح السجلات</span>
+        </button>
+      </div>
+    </div>
 
-  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
-  <div id="modalContainer"></div>
+    <div class="view view-page hidden" id="viewStats" data-view="stats">
+      <div class="page-header">
+        <button type="button" class="btn-icon" id="btnBackStats">
+          <svg class="icon"><use href="#ico-back"/></svg>
+        </button>
+        <h2 class="page-title">الإحصائيات</h2>
+        <span class="page-header-spacer"></span>
+      </div>
+      <div class="page-content">
+        <div class="stats-card">
+          <h3>آخر 7 أيام</h3>
+          <div id="statsChart"></div>
+        </div>
+        <div class="records-list" id="statsSummary"></div>
+      </div>
+    </div>
 
-  <script type="module" src="js/app.js"></script>
+  </main>
+
+  <nav class="main-nav" id="mainNav" aria-label="التنقل">
+    <button type="button" class="main-nav-btn active" data-view="main">
+      <svg class="icon"><use href="#ico-upload"/></svg>
+      <span>الرئيسية</span>
+    </button>
+    <button type="button" class="main-nav-btn" data-view="settings">
+      <svg class="icon"><use href="#ico-settings"/></svg>
+      <span>الإعدادات</span>
+    </button>
+    <button type="button" class="main-nav-btn" data-view="records">
+      <svg class="icon"><use href="#ico-records"/></svg>
+      <span>السجلات</span>
+    </button>
+    <button type="button" class="main-nav-btn" data-view="stats">
+      <svg class="icon"><use href="#ico-stats"/></svg>
+      <span>إحصائيات</span>
+    </button>
+  </nav>
+
+  <footer class="app-footer">
+    <div class="dev-info">
+      <span>المطور: </span><span class="dev-name">محمد الباقر</span>
+      <br>
+      <span>جامعة الإمام جعفر الصادق (ع) - كلية التربية - قسم اللغة الإنجليزية</span>
+    </div>
+    <div class="copyright" dir="ltr">Copyright 2026, lnc. Mohammed Al-Baqer. All rights reserved.</div>
+  </footer>
+
+</div>
+
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+<div id="modalContainer"></div>
+<div id="editorContainer"></div>
+
+<script src="js/core.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/idb.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/fonts.js"></script>
+<script src="js/sizeScreen.js"></script>
+<script src="js/haptics.js"></script>
+<script src="js/history.js"></script>
+<script src="js/shortcuts.js"></script>
+<script src="js/badge.js"></script>
+<script src="js/images.js"></script>
+<script src="js/pdf.js"></script>
+<script src="js/docx.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/suggest.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/exportImport.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

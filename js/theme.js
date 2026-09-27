@@ -1,46 +1,54 @@
-import { updateSetting, getSettings } from './storage.js';
+/**
+ * theme
+ * Dark/light/auto theme management.
+ */
 
-const MEDIA = window.matchMedia('(prefers-color-scheme: dark)');
+(function () {
+  'use strict';
 
-let currentMode = 'auto';
+  var App = window.App;
+  var MEDIA = window.matchMedia('(prefers-color-scheme: dark)');
+  var currentMode = 'auto';
 
-const resolveTheme = (mode) => {
-  if (mode === 'auto') return MEDIA.matches ? 'dark' : 'light';
-  return mode;
-};
-
-const applyTheme = (mode) => {
-  const resolved = resolveTheme(mode);
-  document.documentElement.setAttribute('data-theme', resolved);
-  const meta = document.querySelector('meta[name="theme-color"]:not([media])')
-    || document.querySelector('meta[name="theme-color"]');
-  if (meta) {
-    meta.setAttribute('content', resolved === 'dark' ? '#0b0e14' : '#f4f6fa');
+  function resolve(mode) {
+    if (mode === 'auto') return MEDIA.matches ? 'dark' : 'light';
+    return mode;
   }
-};
 
-export const initTheme = () => {
-  const settings = getSettings();
-  currentMode = settings.theme || 'auto';
-  applyTheme(currentMode);
+  function apply(mode) {
+    var r = resolve(mode);
+    document.documentElement.setAttribute('data-theme', r);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', r === 'dark' ? '#0b0e14' : '#f4f6fa');
+  }
 
-  // Respond to system changes when in auto mode
-  MEDIA.addEventListener('change', () => {
-    if (currentMode === 'auto') applyTheme('auto');
-  });
-};
+  App.Theme = {
+    init: function () {
+      var s = App.Storage.getSettings();
+      currentMode = s.theme || 'auto';
+      apply(currentMode);
+      MEDIA.addEventListener('change', function () {
+        if (currentMode === 'auto') apply('auto');
+      });
+    },
 
-export const setTheme = (mode) => {
-  currentMode = mode;
-  applyTheme(mode);
-  updateSetting('theme', mode);
-};
+    set: function (mode) {
+      currentMode = mode;
+      apply(mode);
+      var s = App.Storage.getSettings();
+      s.theme = mode;
+      App.Storage.saveSettings(s);
+    },
 
-export const getCurrentTheme = () => currentMode;
+    toggle: function () {
+      var r = resolve(currentMode);
+      var next = r === 'dark' ? 'light' : 'dark';
+      this.set(next);
+      return next;
+    },
 
-export const toggleTheme = () => {
-  const resolved = resolveTheme(currentMode);
-  const next = resolved === 'dark' ? 'light' : 'dark';
-  setTheme(next);
-  return next;
-};
+    current: function () { return currentMode; }
+  };
+
+  console.log('[theme] loaded');
+})();

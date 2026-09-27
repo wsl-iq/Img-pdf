@@ -1,108 +1,43 @@
-/* MOBILE — max-width: 599px */
-
 :root {
   --app-max-width: 100%;
   --app-padding: 14px;
-  --content-max-width: 100%;
+  --nav-height: 64px;
 }
 
-.app-title span:last-child {
-  /* Hide text and keep icon */
-  display: none;
-}
+.app-title-text { display: none; }
+.app-title .icon-lg { width: 1.8em; height: 1.8em; }
 
-.app-title .icon {
-  width: 1.8em;
-  height: 1.8em;
-}
-
-/* Drop Zone */
-.drop-zone {
-  min-height: 160px;
-  padding: var(--spacing);
-}
+.drop-zone { min-height: 160px; padding: var(--spacing); }
 .drop-zone-icon { width: 38px; height: 38px; }
 .drop-zone-title { font-size: var(--font-size); }
 .drop-zone-subtitle { font-size: var(--font-size-xs); }
-.drop-zone-formats { font-size: 0.7rem; }
 
-/* Toolbar: full-width buttons on separate rows if needed */
-.toolbar {
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) 0;
-}
+.toolbar-info { width: 100%; margin-inline-end: 0; margin-bottom: var(--spacing-xs); }
+.toolbar .btn-sm { flex: 1; min-width: 0; padding: 8px; font-size: 0.7rem; }
 
-.toolbar-info {
-  width: 100%;
-  justify-content: flex-start;
-  margin-inline-end: 0;
-  margin-bottom: var(--spacing-xs);
-}
+.image-grid { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-xs); }
 
-.toolbar .btn-sm {
-  flex: 1;
-  min-width: 0;
-  padding: 10px 8px;
-  font-size: 0.72rem;
-}
+.action-bar { flex-direction: column; }
+.action-bar .btn { flex: none; width: 100%; }
 
-/* Image grid: 2 columns */
-.image-grid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-xs);
-}
+.segmented button { padding: 8px 6px; font-size: 0.7rem; min-width: 0; }
 
-.image-card-actions .btn-icon {
-  width: 30px;
-  height: 30px;
-}
+.social-links { flex-direction: column; }
+.social-link { width: 100%; }
 
-/* Page header */
-.page-header {
-  padding: var(--spacing-xs) 0;
-}
-
-.page-title {
-  font-size: var(--font-size);
-}
-
-/* Settings: single column */
-.page-content {
-  gap: var(--spacing);
-}
-
-.segmented button {
-  min-width: 0;
-  padding: 8px 6px;
-  font-size: 0.72rem;
-}
-
-/* Modals — bottom sheet style on mobile */
-.modal-overlay {
-  align-items: flex-end;
-  padding: 0;
-}
-
+.modal-overlay { align-items: flex-end; padding: 0; }
 .modal {
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   max-width: 100%;
-  padding: var(--spacing-md) var(--spacing) calc(var(--spacing-md) + env(safe-area-inset-bottom));
-  animation: slideUpSheet var(--transition-slow);
+  padding-bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom));
 }
 
-@keyframes slideUpSheet {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
+.editor-sheet {
+  max-width: 100%;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  max-height: 92dvh;
 }
 
-/* Toast */
-.toast {
-  font-size: var(--font-size-xs);
-  padding: 10px 16px;
-}
+.editor-overlay { align-items: flex-end; padding: 0; }
 
-/* Footer */
-.app-footer {
-  padding: var(--spacing) 0;
-  font-size: 0.68rem;
-}
+.app-footer { padding: var(--spacing) 0; font-size: 0.68rem; }

@@ -1,255 +1,302 @@
-import { formatBytes, formatDate } from './utils.js';
+/**
+ * ui
+ * DOM element cache, toasts, modals, image grid rendering, view switching.
+ */
 
-export const els = {};
+(function () {
+  'use strict';
 
-export const cacheElements = () => {
-  const ids = [
-    'dropZone', 'fileInput', 'imageGrid', 'emptyState', 'imageCount',
-    'btnClearAll', 'btnGenerate', 'btnReorderToggle',
-    'viewMain', 'viewSettings', 'viewRecords',
-    'btnBackSettings', 'btnBackRecords',
-    'recordsList', 'btnClearRecords',
-    'btnToggleSettings', 'btnToggleRecords', 'btnToggleTheme',
-    'btnWipeStorage', 'toastContainer', 'modalContainer',
-  ];
-  ids.forEach((id) => { els[id] = document.getElementById(id); });
-};
+  var App = window.App;
+  var Utils = App.Utils;
 
-/* Toast */
-export const showToast = (message, type = 'info', duration = 3000) => {
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  const iconMap = {
-    success: 'icon-check',
-    error: 'icon-close',
-    warning: 'icon-info',
-    info: 'icon-info',
-  };
-  toast.innerHTML = `<span class="icon ${iconMap[type] || 'icon-info'}" aria-hidden="true"></span><span>${message}</span>`;
-  els.toastContainer.appendChild(toast);
-  setTimeout(() => {
-    toast.classList.add('removing');
-    setTimeout(() => toast.remove(), 300);
-  }, duration);
-};
+  var els = {};
 
-/* Modal */
-export const showModal = (
-  title,
-  message,
-  onConfirm,
-  confirmText = 'تأكيد',
-  cancelText = 'إلغاء'
-) => {
-  const overlay = document.createElement('div');
-  overlay.className = 'modal-overlay';
-  overlay.innerHTML = `
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <h2 id="modalTitle">${title}</h2>
-      <p>${message}</p>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" data-action="cancel">${cancelText}</button>
-        <button type="button" class="btn btn-danger" data-action="confirm">${confirmText}</button>
-      </div>
-    </div>
-  `;
-  els.modalContainer.appendChild(overlay);
-
-  const close = () => {
-    overlay.style.opacity = '0';
-    setTimeout(() => overlay.remove(), 200);
-  };
-
-  overlay.querySelector('[data-action="cancel"]').addEventListener('click', close);
-  overlay.querySelector('[data-action="confirm"]').addEventListener('click', () => {
-    close();
-    onConfirm();
-  });
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) close();
-  });
-
-  const focusable = overlay.querySelectorAll('button');
-  if (focusable.length) focusable[0].focus();
-};
-
-/* Render Image Grid */
-export const renderImages = (items, handlers, reorderMode) => {
-  if (items.length === 0) {
-    els.imageGrid.classList.add('hidden');
-    els.emptyState.classList.remove('hidden');
-    els.imageCount.textContent = '0';
-    return;
+  function cacheElements() {
+    var ids = [
+      'dropZone', 'fileInput', 'imageGrid', 'emptyState', 'imageCount',
+      'btnClearAll', 'btnGenerate', 'btnReorderToggle', 'btnExportWord',
+      'btnUndo', 'btnRedo', 'btnToggleTheme',
+      'btnExportSettings', 'btnImportSettings', 'importInput',
+      'viewMain', 'viewSettings', 'viewRecords', 'viewStats',
+      'btnBackSettings', 'btnBackRecords', 'btnBackStats',
+      'recordsList', 'btnClearRecords', 'btnWipeStorage',
+      'statsChart', 'statsSummary',
+      'mainNav', 'toastContainer', 'modalContainer', 'editorContainer'
+    ];
+    ids.forEach(function (id) {
+      els[id] = document.getElementById(id);
+    });
   }
 
-  els.imageGrid.classList.remove('hidden');
-  els.emptyState.classList.add('hidden');
-  els.imageCount.textContent = items.length;
+  function showToast(message, type, duration) {
+    type = type || 'info';
+    duration = duration || 3000;
 
-  const fragment = document.createDocumentFragment();
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
 
-  items.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.className = 'image-card';
-    li.dataset.id = item.id;
-    li.setAttribute('role', 'listitem');
-    if (reorderMode) li.draggable = true;
+    var iconMap = {
+      success: 'ico-check',
+      error: 'ico-close',
+      warning: 'ico-info',
+      info: 'ico-info'
+    };
 
-    li.innerHTML = `
-      <img src="${item.url}" alt="${item.name}" loading="lazy" />
-      <span class="image-card-index">${index + 1}</span>
-      <div class="image-card-overlay">
-        <div class="image-card-actions">
-          <button type="button" class="btn-icon btn-sm" data-action="up" aria-label="تحريك لأعلى" title="لأعلى">
-            <span class="icon icon-up" aria-hidden="true"></span>
-          </button>
-          <button type="button" class="btn-icon btn-sm" data-action="down" aria-label="تحريك لأسفل" title="لأسفل">
-            <span class="icon icon-down" aria-hidden="true"></span>
-          </button>
-          <button type="button" class="btn-icon btn-sm danger" data-action="remove" aria-label="حذف الصورة" title="حذف">
-            <span class="icon icon-trash" aria-hidden="true"></span>
-          </button>
-        </div>
-        <div>
-          <div class="image-card-name force-ltr-inline">${item.name}</div>
-          <div class="image-card-size force-ltr-inline">${formatBytes(item.size)} · ${item.width}×${item.height}</div>
-        </div>
-      </div>
-    `;
+    toast.innerHTML = '<svg class="icon"><use href="#' + (iconMap[type] || 'ico-info') +
+      '"/></svg><span>' + message + '</span>';
 
-    li.querySelector('[data-action="remove"]').addEventListener('click', (e) => {
-      e.stopPropagation();
-      handlers.onRemove(item.id);
-    });
-    li.querySelector('[data-action="up"]').addEventListener('click', (e) => {
-      e.stopPropagation();
-      handlers.onMoveUp(item.id);
-    });
-    li.querySelector('[data-action="down"]').addEventListener('click', (e) => {
-      e.stopPropagation();
-      handlers.onMoveDown(item.id);
-    });
+    els.toastContainer.appendChild(toast);
 
-    fragment.appendChild(li);
-  });
+    setTimeout(function () {
+      toast.classList.add('removing');
+      setTimeout(function () {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 300);
+    }, duration);
+  }
 
-  els.imageGrid.innerHTML = '';
-  els.imageGrid.appendChild(fragment);
-};
+  function showModal(title, message, onConfirm, confirmText, cancelText) {
+    confirmText = confirmText || 'تأكيد';
+    cancelText = cancelText || 'إلغاء';
 
-/* Render Records */
-export const renderRecords = (records) => {
-  const recent = records.recentOperations || [];
-  els.recordsList.innerHTML = `
-    <div class="record-item">
-      <span class="record-label">ملفات PDF المُنشأة</span>
-      <span class="record-value">${records.totalPdfs || 0}</span>
-    </div>
-    <div class="record-item">
-      <span class="record-label">إجمالي الصور المُعالجة</span>
-      <span class="record-value">${records.totalImages || 0}</span>
-    </div>
-    <div class="record-item">
-      <span class="record-label">آخر إنشاء</span>
-      <span class="record-value">${formatDate(records.lastGeneration)}</span>
-    </div>
-    <div class="record-item">
-      <span class="record-label">أول استخدام</span>
-      <span class="record-value">${formatDate(records.firstUse)}</span>
-    </div>
-    ${
-      recent.length
-        ? `
-      <div class="records-subtitle">آخر العمليات:</div>
-      ${recent
-        .slice(0, 5)
-        .map(
-          (op) => `
-        <div class="record-item small">
-          <span class="record-label">${formatDate(op.date)}</span>
-          <span class="record-value">${op.imageCount} صور · ${op.pageSize.toUpperCase()}</span>
-        </div>`
-        )
-        .join('')}
-    `
-        : ''
+    var overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML =
+      '<div class="modal" role="dialog" aria-modal="true">' +
+        '<h2>' + title + '</h2>' +
+        '<p>' + message + '</p>' +
+        '<div class="modal-actions">' +
+          '<button type="button" class="btn btn-secondary" data-action="cancel">' + cancelText + '</button>' +
+          '<button type="button" class="btn btn-danger" data-action="confirm">' + confirmText + '</button>' +
+        '</div>' +
+      '</div>';
+
+    els.modalContainer.appendChild(overlay);
+
+    function close() {
+      overlay.style.opacity = '0';
+      setTimeout(function () {
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      }, 200);
     }
-  `;
-};
 
-/* View Switching with Animation */
-let currentView = 'main';
-let isAnimating = false;
+    overlay.querySelector('[data-action="cancel"]').addEventListener('click', close);
+    overlay.querySelector('[data-action="confirm"]').addEventListener('click', function () {
+      close();
+      onConfirm();
+    });
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) close();
+    });
 
-const VIEWS = {
-  main: () => els.viewMain,
-  settings: () => els.viewSettings,
-  records: () => els.viewRecords,
-};
+    var focusable = overlay.querySelectorAll('button');
+    if (focusable.length) focusable[0].focus();
+  }
 
-export const showView = (name, direction = 'forward') => {
-  if (isAnimating || name === currentView) return;
+  function renderImages(items, handlers, reorderMode) {
+    if (items.length === 0) {
+      els.imageGrid.classList.add('hidden');
+      els.emptyState.classList.remove('hidden');
+      els.imageCount.textContent = '0';
+      return;
+    }
 
-  const fromEl = VIEWS[currentView]?.();
-  const toEl = VIEWS[name]?.();
-  if (!fromEl || !toEl) return;
+    els.imageGrid.classList.remove('hidden');
+    els.emptyState.classList.add('hidden');
+    els.imageCount.textContent = items.length;
 
-  isAnimating = true;
+    var fragment = document.createDocumentFragment();
 
-  // Prepare target
-  toEl.classList.remove('hidden');
+    items.forEach(function (item, index) {
+      var li = document.createElement('li');
+      li.className = 'image-card';
+      li.setAttribute('data-id', item.id);
+      if (reorderMode) li.draggable = true;
 
-  // Animation classes
-  const isMobile = document.body.dataset.device === 'mobile';
+      var t = item.transforms || {};
+      var styles = [];
+      if (t.rotation) styles.push('transform: rotate(' + t.rotation + 'deg)');
+      if (t.brightness !== undefined || t.contrast !== undefined) {
+        styles.push('filter: brightness(' + (t.brightness === undefined ? 1 : t.brightness) +
+          ') contrast(' + (t.contrast === undefined ? 1 : t.contrast) + ')');
+      }
 
-  if (isMobile) {
-    // Slide on mobile
-    if (direction === 'forward') {
-      toEl.classList.add('view-enter-right');
-      fromEl.classList.add('view-exit-left');
+      li.innerHTML =
+        '<img src="' + item.url + '" alt="" loading="lazy" style="' + styles.join(';') + '">' +
+        '<span class="image-card-index">' + (index + 1) + '</span>' +
+        '<div class="image-card-overlay">' +
+          '<div class="image-card-actions">' +
+            '<button type="button" class="btn-icon" data-action="edit" aria-label="تحرير">' +
+              '<svg class="icon"><use href="#ico-edit"/></svg>' +
+            '</button>' +
+            '<button type="button" class="btn-icon" data-action="up" aria-label="أعلى">' +
+              '<svg class="icon"><use href="#ico-up"/></svg>' +
+            '</button>' +
+            '<button type="button" class="btn-icon" data-action="down" aria-label="أسفل">' +
+              '<svg class="icon"><use href="#ico-down"/></svg>' +
+            '</button>' +
+            '<button type="button" class="btn-icon danger" data-action="remove" aria-label="حذف">' +
+              '<svg class="icon"><use href="#ico-trash"/></svg>' +
+            '</button>' +
+          '</div>' +
+          '<div>' +
+            '<div class="image-card-name force-ltr-inline">' + Utils.escapeHtml(item.name) + '</div>' +
+            '<div class="image-card-size force-ltr-inline">' +
+              Utils.formatBytes(item.size) + ' - ' + item.width + 'x' + item.height +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+      li.querySelector('[data-action="remove"]').addEventListener('click', function (e) {
+        e.stopPropagation();
+        handlers.onRemove(item.id);
+      });
+      li.querySelector('[data-action="edit"]').addEventListener('click', function (e) {
+        e.stopPropagation();
+        handlers.onEdit(item.id);
+      });
+      li.querySelector('[data-action="up"]').addEventListener('click', function (e) {
+        e.stopPropagation();
+        handlers.onMoveUp(item.id);
+      });
+      li.querySelector('[data-action="down"]').addEventListener('click', function (e) {
+        e.stopPropagation();
+        handlers.onMoveDown(item.id);
+      });
+
+      fragment.appendChild(li);
+    });
+
+    els.imageGrid.innerHTML = '';
+    els.imageGrid.appendChild(fragment);
+  }
+
+  function renderRecords(records) {
+    var recent = records.recentOperations || [];
+
+    var html =
+      '<div class="record-item">' +
+        '<span class="record-label">ملفات PDF المُنشأة</span>' +
+        '<span class="record-value">' + (records.totalPdfs || 0) + '</span>' +
+      '</div>' +
+      '<div class="record-item">' +
+        '<span class="record-label">إجمالي الصور المُعالجة</span>' +
+        '<span class="record-value">' + (records.totalImages || 0) + '</span>' +
+      '</div>' +
+      '<div class="record-item">' +
+        '<span class="record-label">آخر إنشاء</span>' +
+        '<span class="record-value">' + Utils.formatDate(records.lastGeneration) + '</span>' +
+      '</div>' +
+      '<div class="record-item">' +
+        '<span class="record-label">أول استخدام</span>' +
+        '<span class="record-value">' + Utils.formatDate(records.firstUse) + '</span>' +
+      '</div>';
+
+    if (recent.length) {
+      html += '<div class="records-subtitle">آخر العمليات:</div>';
+      recent.slice(0, 10).forEach(function (op) {
+        html +=
+          '<div class="record-item small">' +
+            '<span class="record-label">' + Utils.formatDate(op.date) + '</span>' +
+            '<span class="record-value">' + op.imageCount + ' صور - ' + (op.pageSize || '').toUpperCase() + '</span>' +
+          '</div>';
+      });
+    }
+
+    els.recordsList.innerHTML = html;
+  }
+
+  var currentView = 'main';
+  var animating = false;
+
+  function getViewEl(name) {
+    switch (name) {
+      case 'main': return els.viewMain;
+      case 'settings': return els.viewSettings;
+      case 'records': return els.viewRecords;
+      case 'stats': return els.viewStats;
+      default: return null;
+    }
+  }
+
+  function showView(name, direction) {
+    direction = direction || 'forward';
+    if (animating || name === currentView) return;
+
+    var fromEl = getViewEl(currentView);
+    var toEl = getViewEl(name);
+    if (!fromEl || !toEl) return;
+
+    animating = true;
+    toEl.classList.remove('hidden');
+
+    var isMobile = document.body.dataset.device === 'mobile';
+
+    if (isMobile) {
+      if (direction === 'forward') {
+        toEl.classList.add('view-enter-right');
+        fromEl.classList.add('view-exit-left');
+      } else {
+        toEl.classList.add('view-enter-left');
+        fromEl.classList.add('view-exit-right');
+      }
     } else {
-      toEl.classList.add('view-enter-left');
+      toEl.classList.add('view-enter-right');
       fromEl.classList.add('view-exit-right');
     }
-  } else {
-    // Fade + scale on desktop
-    toEl.classList.add('view-enter-right');
-    fromEl.classList.add('view-exit-right');
+
+    setTimeout(function () {
+      fromEl.classList.add('hidden');
+      fromEl.classList.remove('view-exit-left', 'view-exit-right');
+      toEl.classList.remove('view-enter-left', 'view-enter-right');
+      currentView = name;
+      animating = false;
+
+      window.scrollTo({ top: 0, behavior: 'auto' });
+
+      var navBtns = document.querySelectorAll('.main-nav-btn');
+      for (var i = 0; i < navBtns.length; i++) {
+        navBtns[i].classList.toggle('active', navBtns[i].getAttribute('data-view') === name);
+      }
+    }, 380);
   }
 
-  const cleanup = () => {
-    fromEl.classList.add('hidden');
-    fromEl.classList.remove('view-exit-left', 'view-exit-right');
-    toEl.classList.remove('view-enter-left', 'view-enter-right');
-    currentView = name;
-    isAnimating = false;
-    window.scrollTo({ top: 0, behavior: 'auto' });
+  function updateSegmented(container, value) {
+    if (!container) return;
+    var buttons = container.querySelectorAll('button[data-value]');
+    for (var i = 0; i < buttons.length; i++) {
+      var btn = buttons[i];
+      var isActive = btn.getAttribute('data-value') === String(value);
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-checked', String(isActive));
+    }
+  }
+
+  function syncSettingsUI(settings) {
+    var groups = document.querySelectorAll('[data-setting]');
+    for (var i = 0; i < groups.length; i++) {
+      var group = groups[i];
+      var key = group.getAttribute('data-setting');
+      var val = settings[key];
+      if (val !== undefined) updateSegmented(group, val);
+    }
+  }
+
+  App.UI = {
+    els: els,
+    cacheElements: cacheElements,
+    showToast: showToast,
+    showModal: showModal,
+    renderImages: renderImages,
+    renderRecords: renderRecords,
+    showView: showView,
+    getCurrentView: function () { return currentView; },
+    updateSegmented: updateSegmented,
+    syncSettingsUI: syncSettingsUI
   };
 
-  // Wait for animation to complete
-  const duration = isMobile ? 380 : 380;
-  setTimeout(cleanup, duration);
-};
+  console.log('[ui] loaded');
+})();
 
-export const getCurrentView = () => currentView;
-
-/* Segmented Control */
-export const updateSegmented = (container, value) => {
-  if (!container) return;
-  const buttons = container.querySelectorAll('button[data-value]');
-  buttons.forEach((btn) => {
-    const isActive = btn.dataset.value === String(value);
-    btn.classList.toggle('active', isActive);
-    btn.setAttribute('aria-checked', String(isActive));
-  });
-};
-
-/* Sync all settings UI */
-export const syncSettingsUI = (settings) => {
-  const groups = document.querySelectorAll('[data-setting]');
-  groups.forEach((group) => {
-    const key = group.dataset.setting;
-    const val = settings[key];
-    if (val !== undefined) updateSegmented(group, val);
-  });
-};
+// cacheElements
+// showView 

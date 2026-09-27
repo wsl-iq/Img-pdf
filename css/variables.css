@@ -1,5 +1,4 @@
 :root {
-  /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing: 16px;
@@ -7,24 +6,21 @@
   --spacing-lg: 32px;
   --spacing-xl: 48px;
 
-  /* Radius */
   --radius-sm: 8px;
   --radius: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Fonts */
   --font-cairo: 'Cairo', system-ui, sans-serif;
   --font-tajawal: 'Tajawal', system-ui, sans-serif;
   --font-noto: 'Noto Kufi Arabic', system-ui, sans-serif;
   --font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font: var(--font-cairo);
 
-  /* Font sizes */
   --font-size-xs: clamp(0.72rem, 0.68rem + 0.25vw, 0.82rem);
   --font-size-sm: clamp(0.82rem, 0.78rem + 0.25vw, 0.92rem);
-  --font-size:    clamp(0.92rem, 0.88rem + 0.3vw, 1.02rem);
+  --font-size: clamp(0.92rem, 0.88rem + 0.3vw, 1.02rem);
   --font-size-lg: clamp(1.12rem, 1.02rem + 0.5vw, 1.38rem);
   --font-size-xl: clamp(1.42rem, 1.22rem + 1vw, 1.85rem);
 
@@ -32,26 +28,21 @@
   --line-normal: 1.6;
   --line-loose: 1.75;
 
-  /* Motion */
   --transition-fast: 150ms ease;
   --transition: 250ms ease;
   --transition-slow: 400ms cubic-bezier(0.22, 1, 0.36, 1);
   --transition-page: 380ms cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Z-Index */
-  --z-base: 1;
   --z-sticky: 100;
   --z-modal: 500;
   --z-toast: 1000;
+  --z-editor: 900;
 
-  /* Layout — overridden by device-specific css */
   --app-max-width: 100%;
   --app-padding: 16px;
-  --content-max-width: 100%;
+  --nav-height: 68px;
 }
 
-/* THEMES */
-:root,
 html[data-theme="dark"] {
   --bg: #0b0e14;
   --surface: #141820;
@@ -59,31 +50,22 @@ html[data-theme="dark"] {
   --surface-active: #242a38;
   --border: #2a3140;
   --border-strong: #3a4254;
-
   --text: #eef2f7;
   --text-muted: #8b95a8;
   --text-dim: #5e687b;
-
   --accent: #4f8cff;
   --accent-hover: #3a7aff;
   --accent-dim: #1e3a6e;
-
   --success: #34c759;
   --success-dim: #1a3e2a;
-
   --danger: #ff453a;
   --danger-dim: #3e1a1a;
-
   --warning: #ff9f0a;
   --warning-dim: #3e2e0a;
-
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
-
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
   --scrollbar-thumb: #2a3140;
-  --scrollbar-thumb-hover: #3a4254;
-
   color-scheme: dark;
 }
 
@@ -94,35 +76,25 @@ html[data-theme="light"] {
   --surface-active: #e6ebf3;
   --border: #dbe1ea;
   --border-strong: #c2cad6;
-
   --text: #101725;
   --text-muted: #556072;
   --text-dim: #8b95a8;
-
   --accent: #2563eb;
   --accent-hover: #1d4ed8;
   --accent-dim: #dbeafe;
-
   --success: #16a34a;
   --success-dim: #dcfce7;
-
   --danger: #dc2626;
   --danger-dim: #fee2e2;
-
   --warning: #d97706;
   --warning-dim: #fef3c7;
-
-  --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.08);
-  --shadow: 0 4px 16px rgba(16, 24, 40, 0.10);
-  --shadow-lg: 0 8px 32px rgba(16, 24, 40, 0.14);
-
+  --shadow-sm: 0 1px 3px rgba(16,24,40,0.08);
+  --shadow: 0 4px 16px rgba(16,24,40,0.10);
+  --shadow-lg: 0 8px 32px rgba(16,24,40,0.14);
   --scrollbar-thumb: #c2cad6;
-  --scrollbar-thumb-hover: #8b95a8;
-
   color-scheme: light;
 }
 
-/* FONT FAMILY VARIANTS */
 html[data-font="cairo"]   { --font: var(--font-cairo); }
 html[data-font="tajawal"] { --font: var(--font-tajawal); }
 html[data-font="noto"]    { --font: var(--font-noto); }
