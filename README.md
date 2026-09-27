@@ -1,9 +1,13 @@
-# Img-PDF
+### *Transformation From Image To pdf & docx*
 
 Transform any image (`.png`, `.jpg`, `.jpeg`, `.webp`) into a PDF or DOCX document.
 
 A fast, offline-capable, native-feel web application built with pure HTML5, CSS3, and vanilla JavaScript. No frameworks. No libraries. No tracking. No server.
 
+---
+### **Download**
+[![Windows](https://custom-icon-badges.demolab.com/badge/Windows-0078D6?logo=windows11&logoColor=white)](https://github.com/wsl-iq/Img-pdf/releases/download/1.0.0/Image-pdf-V1.0.0.exe)
+[![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white)](https://github.com/wsl-iq/Img-pdf/releases/download/1.0.0/From.Images.To.pdf.docx.apk)
 ---
 
 ## Features
